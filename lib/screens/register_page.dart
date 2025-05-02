@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Registerview extends StatefulWidget {
@@ -8,16 +9,18 @@ class Registerview extends StatefulWidget {
 }
 
 class _RegisterviewState extends State<Registerview> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _conformPassword = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _conformPassword = TextEditingController();
 
   final _regKey = GlobalKey<FormState>();
 
+  @override
   Widget build(BuildContext context) {
     final theamdata = Theme.of(context);
     return Scaffold(
       appBar: AppBar(iconTheme: IconThemeData(color: Colors.white)),
+      // ignore: sized_box_for_whitespace
       body: Container(
         height: double.infinity,
         width: double.infinity,
@@ -66,6 +69,7 @@ class _RegisterviewState extends State<Registerview> {
                     if (value!.isEmpty) {
                       return "Enter password";
                     }
+                    return null;
                   },
                   cursorColor: Colors.tealAccent,
                   decoration: InputDecoration(
@@ -86,6 +90,7 @@ class _RegisterviewState extends State<Registerview> {
                 TextFormField(
                   style: theamdata.textTheme.displayMedium,
                   controller: _conformPassword,
+                  obscureText: true,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "Enter Password ";
@@ -107,17 +112,28 @@ class _RegisterviewState extends State<Registerview> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Container(
-                  height: 48,
-                  width: 250,
-                  decoration: BoxDecoration(
-                    color: Colors.teal,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Login",
-                      style: theamdata.textTheme.displayMedium,
+                InkWell(
+                  onTap: () {
+                    if (_regKey.currentState!.validate()) {
+                      FirebaseAuth.instance.createUserWithEmailAndPassword(
+                        email: _emailController.text.trim(),
+                        password: _passwordController.text.trim(),
+                      );
+                      
+                    }
+                  },
+                  child: Container(
+                    height: 48,
+                    width: 250,
+                    decoration: BoxDecoration(
+                      color: Colors.teal,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Login",
+                        style: theamdata.textTheme.displayMedium,
+                      ),
                     ),
                   ),
                 ),

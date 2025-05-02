@@ -10,18 +10,85 @@ class TodoHomePage extends StatefulWidget {
 class _TodoHomePageState extends State<TodoHomePage> {
   @override
   Widget build(BuildContext context) {
+    final theamdate = Theme.of(context);
     return Scaffold(
+      appBar: AppBar(),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.teal,
+        onPressed: () {
+          Navigator.pushNamed(context, "/addtask");
+        },
+        child: Icon(Icons.add, color: Colors.white),
+      ),
+
       body: Container(
         height: double.infinity,
         width: double.infinity,
         padding: EdgeInsets.all(20),
-        child: Column(children: [
-          Row(
-            children: [
-              Text("hi")
-            ],
-          )
-        ]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Row(
+                    children: [
+                      Text("Hi", style: theamdate.textTheme.displayLarge),
+                      SizedBox(width: 10),
+                      Text("Faisal", style: theamdate.textTheme.displayLarge),
+                    ],
+                  ),
+                ),
+                CircleAvatar(),
+              ],
+            ),
+            SizedBox(height: 15),
+            Text("Your Tasks", style: theamdate.textTheme.displayMedium),
+            SizedBox(height: 15),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return Card(
+                  elevation: 5,
+                  color: theamdate.scaffoldBackgroundColor,
+
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      child: Icon(Icons.circle_outlined, color: Colors.white),
+                    ),
+                    title: Text(
+                      "Todo one",
+                      style: theamdate.textTheme.displaySmall,
+                    ),
+                    subtitle: Text(
+                      "complete the assignment before 10 am tommorrow",
+                      style: theamdate.textTheme.displaySmall,
+                    ),
+                    trailing: Container(
+                      width: 100,
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.edit, color: Colors.teal),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.delete, color: Colors.red),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

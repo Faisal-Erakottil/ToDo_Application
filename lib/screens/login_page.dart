@@ -8,14 +8,16 @@ class Loginview extends StatefulWidget {
 }
 
 class _LoginviewState extends State<Loginview> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   final _loginKey = GlobalKey<FormState>();
 
+  @override
   Widget build(BuildContext context) {
     final theamdata = Theme.of(context);
     return Scaffold(
+      // ignore: sized_box_for_whitespace
       body: Container(
         height: double.infinity,
         width: double.infinity,
@@ -64,6 +66,7 @@ class _LoginviewState extends State<Loginview> {
                     if (value!.isEmpty) {
                       return "Enter password";
                     }
+                    return null;
                   },
                   cursorColor: Colors.tealAccent,
                   decoration: InputDecoration(

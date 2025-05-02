@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/firebase_options.dart';
+import 'package:flutter_application_2/screens/add_task_page.dart';
 import 'package:flutter_application_2/screens/login_page.dart';
 import 'package:flutter_application_2/screens/register_page.dart';
 import 'package:flutter_application_2/screens/todo_home_page.dart';
@@ -20,11 +21,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'To Do Application',
-      initialRoute: "/home",
+      initialRoute: "/",
       routes: {
         "/": (context) => Loginview(),
         "/register": (context) => Registerview(),
-        "/home":(context) => TodoHomePage(),
+        "/home": (context) => TodoHomePage(),
+        "/addtask": (context) => AddTaskView(),
       },
       theme: ThemeData(
         textTheme: TextTheme(
