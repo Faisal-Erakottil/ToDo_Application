@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Loginview extends StatefulWidget {
@@ -84,17 +85,31 @@ class _LoginviewState extends State<Loginview> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Container(
-                  height: 48,
-                  width: 250,
-                  decoration: BoxDecoration(
-                    color: Colors.teal,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Login",
-                      style: theamdata.textTheme.displayMedium,
+                InkWell(
+                  onTap: () async {
+                    if (_loginKey.currentState!.validate()) {
+                      //     UserCredential userdata=await FirebaseAuth.instance.signInWithEmailAndPassword(
+                      //   email: _emailController.text.trim(),
+                      //   password: _passwordController.text.trim(),
+                      // );
+                      // if(userdata!=null){
+                      //   Navigator.pushNamedAndRemoveUntil(context, "/home", (route)=>false);
+                      // }
+                      _login();
+                    }
+                  },
+                  child: Container(
+                    height: 48,
+                    width: 250,
+                    decoration: BoxDecoration(
+                      color: Colors.teal,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Login",
+                        style: theamdata.textTheme.displayMedium,
+                      ),
                     ),
                   ),
                 ),
@@ -123,5 +138,16 @@ class _LoginviewState extends State<Loginview> {
         ),
       ),
     );
+  }
+
+  _login() async {
+    UserCredential userdata = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+    if (userdata != null) {
+      Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+    }
   }
 }

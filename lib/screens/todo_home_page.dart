@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class TodoHomePage extends StatefulWidget {
@@ -41,7 +42,23 @@ class _TodoHomePageState extends State<TodoHomePage> {
                     ],
                   ),
                 ),
-                CircleAvatar(),
+                CircleAvatar(
+                  child: IconButton(
+                    onPressed: () {
+                      final user = FirebaseAuth.instance.currentUser;
+                      FirebaseAuth.instance.signOut().then((value) {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          "/",
+                          (route) => false,
+                        );
+                        print(user!.email);
+                      });
+                     // print(user!.uid);
+                    },
+                    icon: Icon(Icons.logout),
+                  ),
+                ),
               ],
             ),
             SizedBox(height: 15),
