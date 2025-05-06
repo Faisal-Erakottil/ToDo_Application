@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/models/user_model.dart';
 
 class Loginview extends StatefulWidget {
   const Loginview({super.key});
@@ -13,6 +14,7 @@ class _LoginviewState extends State<Loginview> {
   final TextEditingController _passwordController = TextEditingController();
 
   final _loginKey = GlobalKey<FormState>();
+  UserModel _userMaodel = UserModel();
 
   @override
   Widget build(BuildContext context) {

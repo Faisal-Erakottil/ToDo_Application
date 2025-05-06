@@ -1,34 +1,68 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_2/models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final CollectionReference _userCollection = FirebaseFirestore.instance
       .collection('users');
+
   Future<UserCredential?> registerUser(UserModel user) async {
-    UserCredential userdata = await FirebaseAuth.instance
+    UserCredential userData = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(
           email: user.email.toString(),
           password: user.password.toString(),
         );
-    if (userdata != null) {
+    if (userData != null) {
       FirebaseFirestore.instance
           .collection('users')
-          .doc(userdata.user!.uid)
+          .doc(userData.user!.uid)
           .set({
-            "uid": userdata.user!.uid,
-            'email': userdata.user!.email,
+            "uid": userData.user!.uid,
+            'email': userData.user!.email,
             'name': user.name,
             'createdAt': user.createdAt,
             'status': user.status,
           });
-          return userdata;
+      return userData;
     }
   }
   // add
 
   // login
+  Future<DocumentSnapshot?> loginUser(UserModel user) async {
+    DocumentSnapshot? snap;
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      email: user.email.toString(),
+      password: user.password.toString(),
+    );
+    String? token = await userCredential.user!.getIdToken();
+    if (userCredential != null) {
+      snap = await _userCollection.doc(userCredential.user!.uid).get();
+      // save the data to shared preferences
+      await _pref.setString("token", token!);
+      await _pref.setString('name', snap['name']);
+      await _pref.setString('email', snap['email']);
 
-  // save the data to shared preferences
+      return snap;
+    }
+  }
+
+  // logout
+  Future<void> logoutUser() async {
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    await _pref.clear();
+    await _auth.signOut();
+  }
+  Future<bool> isloggedin() async {
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    String? _token = await _pref.getString('token');
+    if(_token == null){
+      return false;
+    }else {
+      return true;
+    }
+  }
 }

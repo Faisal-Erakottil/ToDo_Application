@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/models/user_model.dart';
@@ -132,7 +133,7 @@ class _RegisterviewState extends State<Registerview> {
                     TextFormField(
                       style: theamdata.textTheme.displayMedium,
                       controller: _nameController,
-                      obscureText: true,
+                      //obscureText: true,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Enter Name ";
@@ -157,11 +158,43 @@ class _RegisterviewState extends State<Registerview> {
                     InkWell(
                       onTap: () async {
                         if (_regKey.currentState!.validate()) {
+                          _register();
+                          // _userModel = UserModel(
+                          //   email: _emailController.text,
+                          //   password: _passwordController.text,
+                          //   name: _nameController.text,
+                          //   status: 1,
+                          //   createdAt: DateTime.now(),
+                          // );
+                          // final userdata= await _authService.registerUser(_userModel);
+                          // if (userdata != null) {
+                          //   Navigator.pushNamedAndRemoveUntil(
+                          //     context,
+                          //     '/home',
+                          //     (route) => false,
+                          //   );
+                          // }
+                          ////////////////////////////////////
                           // UserCredential UserData = await FirebaseAuth.instance
                           //     .createUserWithEmailAndPassword(
                           //       email: _emailController.text.trim(),
                           //       password: _passwordController.text.trim(),
                           //     );
+
+                          // if (UserData != null) {
+                          //   FirebaseFirestore.instance
+                          //       .collection('users')
+                          //       .doc(UserData.user!.uid)
+                          //       .set({
+                          //         'uid': UserData.user!.uid,
+                          //         'email': UserData.user!.email,
+                          //         'name': _nameController.text,
+                          //         'createdAt': DateTime.now(),
+                          //         'status': 1,
+                          //       })
+                          //       .then((value) => Navigator.pushNamedAndRemoveUntil(context,'/home', (route)=>false));
+
+                          // }
                           // if (UserData != null) {
                           //   FirebaseFirestore.instance
                           //       .collection("users")
