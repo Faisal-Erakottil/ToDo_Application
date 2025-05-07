@@ -25,14 +25,17 @@ class _SplashViewState extends State<SplashView> {
 
     @override
     void initState() {
+
       getData();
 
-      var d=Duration(seconds: 5);
-      Future.delayed(d, () {
+      var d=Duration(seconds: 2);
+
+      Future.delayed(d, () {   
         checkLoginStatus();
       });
-      //checkLoginStatus();
+
       super.initState();
+
     }
 
     Future<void> checkLoginStatus() async {
