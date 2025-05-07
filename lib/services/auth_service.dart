@@ -45,6 +45,7 @@ class AuthService {
       await _pref.setString("token", token!);
       await _pref.setString('name', snap['name']);
       await _pref.setString('email', snap['email']);
+      await _pref.setString('uid', snap['uid']);
 
       return snap;
     }
@@ -56,12 +57,13 @@ class AuthService {
     await _pref.clear();
     await _auth.signOut();
   }
+
   Future<bool> isloggedin() async {
     SharedPreferences _pref = await SharedPreferences.getInstance();
     String? _token = await _pref.getString('token');
-    if(_token == null){
+    if (_token == null) {
       return false;
-    }else {
+    } else {
       return true;
     }
   }

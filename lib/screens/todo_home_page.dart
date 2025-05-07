@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/services/auth_service.dart';
 
 class TodoHomePage extends StatefulWidget {
   const TodoHomePage({super.key});
@@ -46,13 +47,15 @@ class _TodoHomePageState extends State<TodoHomePage> {
                   child: IconButton(
                     onPressed: () {
                       final user = FirebaseAuth.instance.currentUser;
-                      FirebaseAuth.instance.signOut().then((value) {
+                      AuthService().logoutUser() .then((value) {
+                        //print(user!.email);
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           "/",
                           (route) => false,
                         );
-                        print(user!.email);
+                       
+                        
                       });
                      // print(user!.uid);
                     },
