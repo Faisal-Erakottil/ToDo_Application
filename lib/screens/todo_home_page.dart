@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/models/task_moel.dart';
 import 'package:flutter_application_2/services/auth_service.dart';
 
 class TodoHomePage extends StatefulWidget {
@@ -47,17 +49,15 @@ class _TodoHomePageState extends State<TodoHomePage> {
                   child: IconButton(
                     onPressed: () {
                       final user = FirebaseAuth.instance.currentUser;
-                      AuthService().logoutUser() .then((value) {
+                      AuthService().logoutUser().then((value) {
                         //print(user!.email);
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           "/",
                           (route) => false,
                         );
-                       
-                        
                       });
-                     // print(user!.uid);
+                      // print(user!.uid);
                     },
                     icon: Icon(Icons.logout),
                   ),
@@ -67,42 +67,87 @@ class _TodoHomePageState extends State<TodoHomePage> {
             SizedBox(height: 15),
             Text("Your Tasks", style: theamdate.textTheme.displayMedium),
             SizedBox(height: 15),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return Card(
-                  elevation: 5,
-                  color: theamdate.scaffoldBackgroundColor,
 
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      child: Icon(Icons.circle_outlined, color: Colors.white),
-                    ),
-                    title: Text(
-                      "Todo one",
+            StreamBuilder(
+              stream:
+                  FirebaseFirestore.instance.collection('tasks').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasData && snapshot.data!.docs.length == 0) {
+                  return Center(
+                    child: Text(
+                      "No Tasks Found",
                       style: theamdate.textTheme.displaySmall,
                     ),
-                    subtitle: Text(
-                      "complete the assignment before 10 am tommorrow",
+                  );
+                }
+
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      "Somthing went Wrong",
                       style: theamdate.textTheme.displaySmall,
                     ),
-                    trailing: Container(
-                      width: 100,
-                      child: Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.edit, color: Colors.teal),
+                  );
+                }
+
+                if (snapshot.hasData && snapshot.data!.docs.length != 0) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      TaskModel _taskmodel = TaskModel();
+                      final _task = TaskModel.fromJson(
+                        snapshot.data!.docs[index],
+                      );
+                      print(_task);
+
+                      return Card(
+                        elevation: 5,
+                        color: theamdate.scaffoldBackgroundColor,
+
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            child: Icon(
+                              Icons.circle_outlined,
+                              color: Colors.white,
+                            ),
                           ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.delete, color: Colors.red),
+                          title: Text(
+                            "${_task.title}",
+                            style: theamdate.textTheme.displaySmall,
                           ),
-                        ],
-                      ),
-                    ),
+                          subtitle: Text(
+                            "${_task.body}",
+                            style: theamdate.textTheme.displaySmall,
+                          ),
+                          trailing: Container(
+                            width: 100,
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.edit, color: Colors.teal),
+                                ),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+                return Center(
+                  child: Text(
+                    "some error occured",
+                    style: theamdate.textTheme.bodyMedium,
                   ),
                 );
               },
