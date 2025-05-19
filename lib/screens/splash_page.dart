@@ -13,6 +13,7 @@ class _SplashViewState extends State<SplashView> {
   String? email;
   String? uid;
   String? token;
+  //taking values from shared preferences
   getData() async {
     SharedPreferences _pref = await SharedPreferences.getInstance();
     token = _pref.getString('token');

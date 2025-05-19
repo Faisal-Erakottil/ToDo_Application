@@ -7,7 +7,7 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final CollectionReference _userCollection = FirebaseFirestore.instance
       .collection('users');
-
+  // creating new user in fire store
   Future<UserCredential?> registerUser(UserModel user) async {
     UserCredential userData = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(
@@ -28,7 +28,6 @@ class AuthService {
       return userData;
     }
   }
-  // add
 
   // login
   Future<DocumentSnapshot?> loginUser(UserModel user) async {
@@ -38,6 +37,7 @@ class AuthService {
       email: user.email.toString(),
       password: user.password.toString(),
     );
+    // get the token
     String? token = await userCredential.user!.getIdToken();
     if (userCredential != null) {
       snap = await _userCollection.doc(userCredential.user!.uid).get();
@@ -57,7 +57,7 @@ class AuthService {
     await _pref.clear();
     await _auth.signOut();
   }
-
+  //checking if user is logged in or not
   Future<bool> isloggedin() async {
     SharedPreferences _pref = await SharedPreferences.getInstance();
     String? _token = await _pref.getString('token');
@@ -68,3 +68,5 @@ class AuthService {
     }
   }
 }
+
+

@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/models/task_moel.dart';
+import 'package:flutter_application_2/screens/add_task_page.dart';
 import 'package:flutter_application_2/services/auth_service.dart';
+import 'package:flutter_application_2/services/task_service.dart';
 
 class TodoHomePage extends StatefulWidget {
   const TodoHomePage({super.key});
@@ -48,7 +48,7 @@ class _TodoHomePageState extends State<TodoHomePage> {
                 CircleAvatar(
                   child: IconButton(
                     onPressed: () {
-                      final user = FirebaseAuth.instance.currentUser;
+                      //final user = FirebaseAuth.instance.currentUser;
                       AuthService().logoutUser().then((value) {
                         //print(user!.email);
                         Navigator.pushNamedAndRemoveUntil(
@@ -68,14 +68,13 @@ class _TodoHomePageState extends State<TodoHomePage> {
             Text("Your Tasks", style: theamdate.textTheme.displayMedium),
             SizedBox(height: 15),
 
-            StreamBuilder(
-              stream:
-                  FirebaseFirestore.instance.collection('tasks').snapshots(),
+            StreamBuilder<List<TaskModel>>(
+              stream: TaskService().getAllTasks(), 
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
                 }
-                if (snapshot.hasData && snapshot.data!.docs.length == 0) {
+                if (snapshot.hasData && snapshot.data!.length == 0) {
                   return Center(
                     child: Text(
                       "No Tasks Found",
@@ -87,21 +86,20 @@ class _TodoHomePageState extends State<TodoHomePage> {
                 if (snapshot.hasError) {
                   return Center(
                     child: Text(
-                      "Somthing went Wrong",
+                      //"Somthing went Wrong",
+                      snapshot.error.toString(),
                       style: theamdate.textTheme.displaySmall,
                     ),
                   );
                 }
 
-                if (snapshot.hasData && snapshot.data!.docs.length != 0) {
+                if (snapshot.hasData && snapshot.data!.length != 0) {
+                  List<TaskModel> tasks = snapshot.data ?? [];
                   return ListView.builder(
                     shrinkWrap: true,
-                    itemCount: snapshot.data!.docs.length,
+                    itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
-                      TaskModel _taskmodel = TaskModel();
-                      final _task = TaskModel.fromJson(
-                        snapshot.data!.docs[index],
-                      );
+                      final _task = tasks[index];
                       print(_task);
 
                       return Card(
@@ -129,11 +127,21 @@ class _TodoHomePageState extends State<TodoHomePage> {
                             child: Row(
                               children: [
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AddTaskView(task:_task),
+                                      ),
+                                    );
+                                  },
                                   icon: Icon(Icons.edit, color: Colors.teal),
                                 ),
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    
+                                    TaskService().deleteTask(_task.id!);
+                                  },
                                   icon: Icon(Icons.delete, color: Colors.red),
                                 ),
                               ],

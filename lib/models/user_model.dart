@@ -16,6 +16,7 @@ class UserModel {
     this.status,
     this.uid,
   });
+
   factory UserModel.fromjson(DocumentSnapshot data) {
     return UserModel(
       email: data['email'],
@@ -24,6 +25,7 @@ class UserModel {
       status: data['status'],
     );
   }
+
   Map<String, dynamic> tojson() {
     return {
       'uid': uid,
@@ -34,4 +36,5 @@ class UserModel {
       'createdAt': createdAt,
     };
   }
+  
 }

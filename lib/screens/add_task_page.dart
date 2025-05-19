@@ -5,7 +5,9 @@ import 'package:flutter_application_2/services/task_service.dart'
 import 'package:uuid/uuid.dart';
 
 class AddTaskView extends StatefulWidget {
-  const AddTaskView({super.key});
+  final TaskModel? task;
+
+  const AddTaskView({super.key, this.task});
 
   @override
   State<AddTaskView> createState() => _AddTaskViewState();
@@ -14,14 +16,32 @@ class AddTaskView extends StatefulWidget {
 class _AddTaskViewState extends State<AddTaskView> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  
+  TaskService _taskService = TaskService();
+  bool _edit = false;
+
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
     super.dispose();
   }
-  
+
+  loadData() {
+    if (widget.task != null) {
+      setState(() {
+        _titleController.text = widget.task!.title!;
+        _titleController.text = widget.task!.body!;
+        _edit = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    loadData();
+    super.initState();
+  }
+
   final _taskKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -40,10 +60,15 @@ class _AddTaskViewState extends State<AddTaskView> {
               crossAxisAlignment: CrossAxisAlignment.start,
 
               children: [
-                Text(
-                  "Add Task",
-                  style: Theme.of(context).textTheme.displayLarge,
-                ),
+                _edit == true
+                    ? Text(
+                      "Update Task",
+                      style: theamdata.textTheme.displayLarge,
+                    )
+                    : Text(
+                      "Add New Task",
+                      style: theamdata.textTheme.displayLarge,
+                    ),
                 SizedBox(height: 5),
                 Divider(color: Colors.teal, thickness: 2, endIndent: 50),
                 const SizedBox(height: 20),
@@ -83,6 +108,7 @@ class _AddTaskViewState extends State<AddTaskView> {
                   cursorColor: Colors.tealAccent,
                   decoration: InputDecoration(
                     hintText: "Enter Task Description",
+                    
                     hintStyle: theamdata.textTheme.displayMedium,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -99,7 +125,19 @@ class _AddTaskViewState extends State<AddTaskView> {
                   child: GestureDetector(
                     onTap: () {
                       if (_taskKey.currentState!.validate()) {
-                        _addTask();
+                        if (_edit) {
+                          TaskModel _taskmodel = TaskModel(
+                            id: widget.task!.id,
+                            title: _titleController.text,
+                            body: _descriptionController.text,
+                            status: 1,
+                            createdAt: DateTime.now(),
+                            
+                          );
+                          _taskService.updateTask(_taskmodel).then((value)=>Navigator.pop(context));
+                        } else {
+                          _addTask();
+                        }
                       }
                     },
                     child: Container(
@@ -110,10 +148,16 @@ class _AddTaskViewState extends State<AddTaskView> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
-                        child: Text(
-                          "Add Task",
-                          style: theamdata.textTheme.displayMedium,
-                        ),
+                        child:
+                            _edit == true
+                                ? Text(
+                                  "update Task",
+                                  style: theamdata.textTheme.displayMedium,
+                                )
+                                : Text(
+                                  "Add New Task",
+                                  style: theamdata.textTheme.displayMedium,
+                                ),
                       ),
                     ),
                   ),
@@ -129,7 +173,7 @@ class _AddTaskViewState extends State<AddTaskView> {
   _addTask() async {
     var id = Uuid().v1();
 
-    TaskModel _taskmodel = TaskModel(
+    TaskModel _taskModel = TaskModel(
       title: _titleController.text,
       body: _descriptionController.text,
       id: id,
@@ -138,7 +182,7 @@ class _AddTaskViewState extends State<AddTaskView> {
     );
 
     TaskService _taskService = TaskService();
-    final task = await _taskService.createTask(_taskmodel);
+    final task = await _taskService.createTask(_taskModel);
 
     if (task != null) {
       Navigator.pop(context);
