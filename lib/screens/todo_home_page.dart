@@ -48,16 +48,14 @@ class _TodoHomePageState extends State<TodoHomePage> {
                 CircleAvatar(
                   child: IconButton(
                     onPressed: () {
-                      //final user = FirebaseAuth.instance.currentUser;
+                     
                       AuthService().logoutUser().then((value) {
-                        //print(user!.email);
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           "/",
                           (route) => false,
                         );
                       });
-                      // print(user!.uid);
                     },
                     icon: Icon(Icons.logout),
                   ),
@@ -86,8 +84,8 @@ class _TodoHomePageState extends State<TodoHomePage> {
                 if (snapshot.hasError) {
                   return Center(
                     child: Text(
-                      //"Somthing went Wrong",
-                      snapshot.error.toString(),
+                      "Somthing went Wrong",
+                      //snapshot.error.toString(),
                       style: theamdate.textTheme.displaySmall,
                     ),
                   );

@@ -16,7 +16,7 @@ class AddTaskView extends StatefulWidget {
 class _AddTaskViewState extends State<AddTaskView> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  TaskService _taskService = TaskService();
+  final TaskService _taskService = TaskService();
   bool _edit = false;
 
   @override

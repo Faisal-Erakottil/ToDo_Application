@@ -27,6 +27,7 @@ class AuthService {
           });
       return userData;
     }
+    return null;
   }
 
   // login
@@ -49,6 +50,7 @@ class AuthService {
 
       return snap;
     }
+    return null;
   }
 
   // logout
