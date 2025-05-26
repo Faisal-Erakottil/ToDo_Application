@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
       },
       theme: ThemeData(
         textTheme: TextTheme(
+          
           displayLarge: TextStyle(color: Colors.white, fontSize: 25),
           displayMedium: TextStyle(color: Colors.white, fontSize: 18),
           displaySmall: TextStyle(color: Colors.white, fontSize: 14),
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(backgroundColor: Color(0xff0E1D3E)),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
+      
       //home: Loginview(),
     );
   }

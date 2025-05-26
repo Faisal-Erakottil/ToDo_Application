@@ -16,6 +16,7 @@ class AddTaskView extends StatefulWidget {
 class _AddTaskViewState extends State<AddTaskView> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
   final TaskService _taskService = TaskService();
   bool _edit = false;
 
@@ -108,7 +109,7 @@ class _AddTaskViewState extends State<AddTaskView> {
                   cursorColor: Colors.tealAccent,
                   decoration: InputDecoration(
                     hintText: "Enter Task Description",
-                    
+
                     hintStyle: theamdata.textTheme.displayMedium,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -121,6 +122,33 @@ class _AddTaskViewState extends State<AddTaskView> {
                   ),
                 ),
                 const SizedBox(height: 10),
+                /////////////////////////////////////////////////////
+                TextFormField(
+                  style: theamdata.textTheme.displayMedium,
+                  controller: _dateController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "select Date";
+                    }
+                    return null;
+                  },
+                  cursorColor: Colors.tealAccent,
+                  decoration: InputDecoration(
+                    hintText: "Select Date",
+
+                    hintStyle: theamdata.textTheme.displayMedium,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                  ),
+                ),
+                /////////////////////////
+                SizedBox(height: 20),
                 Center(
                   child: GestureDetector(
                     onTap: () {
@@ -132,9 +160,10 @@ class _AddTaskViewState extends State<AddTaskView> {
                             body: _descriptionController.text,
                             status: 1,
                             createdAt: DateTime.now(),
-                            
                           );
-                          _taskService.updateTask(_taskmodel).then((value)=>Navigator.pop(context));
+                          _taskService
+                              .updateTask(_taskmodel)
+                              .then((value) => Navigator.pop(context));
                         } else {
                           _addTask();
                         }
