@@ -17,6 +17,7 @@ class _AddTaskViewState extends State<AddTaskView> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
   final TaskService _taskService = TaskService();
   bool _edit = false;
 
@@ -125,6 +126,9 @@ class _AddTaskViewState extends State<AddTaskView> {
                 /////////////////////////////////////////////////////
                 TextFormField(
                   style: theamdata.textTheme.displayMedium,
+                  keyboardType: TextInputType.datetime,
+                  readOnly: true,
+                  onTap: () => _selectDate(context),
                   controller: _dateController,
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -148,6 +152,35 @@ class _AddTaskViewState extends State<AddTaskView> {
                   ),
                 ),
                 /////////////////////////
+                SizedBox(height: 10),
+                TextFormField(
+                  style: theamdata.textTheme.displayMedium,
+                  controller: _timeController,
+                  readOnly: true,
+                  //keyboardType: TextInputType.datetime,
+                  onTap: () => _selectTime(context),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "select Time";
+                    }
+                    return null;
+                  },
+                  cursorColor: Colors.tealAccent,
+                  decoration: InputDecoration(
+                    hintText: "Select Time",
+
+                    hintStyle: theamdata.textTheme.displayMedium,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                  ),
+                ),
+                ////////////////////////
                 SizedBox(height: 20),
                 Center(
                   child: GestureDetector(
@@ -199,6 +232,7 @@ class _AddTaskViewState extends State<AddTaskView> {
     );
   }
 
+  /////////////////////////////////////////////////////////////////
   _addTask() async {
     var id = Uuid().v1();
 
@@ -220,4 +254,38 @@ class _AddTaskViewState extends State<AddTaskView> {
       ).showSnackBar(SnackBar(content: Text("Task Created")));
     }
   }
+
+  ////////////////////////////////
+  //time picker function
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (picked != null) {
+      final formattedTime = picked.format(context); // eg: 10:30 AM
+      setState(() {
+        _timeController.text = formattedTime;
+      });
+    }
+  }
+  /////////////////////////////////////////////////////////////////
+  //date picker function
+  Future<void> _selectDate(BuildContext context) async {
+  final DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime(2000),
+    lastDate: DateTime(2100),
+  );
+
+  if (picked != null) {
+    final formattedDate = "${picked.day}/${picked.month}/${picked.year}";
+    setState(() {
+      _dateController.text = formattedDate;
+    });
+  }
+}
+
 }

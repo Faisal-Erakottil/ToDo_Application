@@ -45,4 +45,4 @@ app.*.map.json
 /android/app/release
 
 #Custom ignore files
-lib\firebase_options.dart
+/lib/firebase_options.dart

@@ -137,7 +137,6 @@ class _TodoHomePageState extends State<TodoHomePage> {
                                 ),
                                 IconButton(
                                   onPressed: () {
-                                    
                                     TaskService().deleteTask(_task.id!);
                                   },
                                   icon: Icon(Icons.delete, color: Colors.red),
