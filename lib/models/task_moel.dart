@@ -6,17 +6,18 @@ class TaskModel {
   String? body;
   int? status;
   DateTime? createdAt;
+  DateTime? dueDate;
 
-  TaskModel({this.id, this.title, this.body, this.status, this.createdAt,});
+  TaskModel({this.id, this.title, this.body, this.status, this.createdAt,this.dueDate});
 
   factory TaskModel.fromJson(DocumentSnapshot json) {
-  
     return TaskModel(
       id: json['id'],
       title: json['title'],
       body: json['body'],
-      createdAt: (json['createdAt']as Timestamp?)?.toDate(),
+      createdAt: (json['createdAt'] as Timestamp?)?.toDate(),
       status: json['status'],
+      dueDate: (json['dueDate'] as Timestamp?)?.toDate(),
     );
   }
 
@@ -27,6 +28,7 @@ class TaskModel {
       'body': body,
       'status': status,
       'createdAt': createdAt,
+      'dueDate': dueDate,
     };
   }
 }

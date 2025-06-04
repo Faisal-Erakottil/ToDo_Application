@@ -199,6 +199,8 @@ class _AddTaskViewState extends State<AddTaskView> {
                               .then((value) => Navigator.pop(context));
                         } else {
                           _addTask();
+                          Navigator.pop(context);
+                          
                         }
                       }
                     },
@@ -241,7 +243,8 @@ class _AddTaskViewState extends State<AddTaskView> {
       body: _descriptionController.text,
       id: id,
       status: 1,
-      createdAt: DateTime.now(),
+      createdAt: DateTime.now(
+      ),
     );
 
     TaskService _taskService = TaskService();

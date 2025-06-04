@@ -9,24 +9,29 @@ class TaskService {
 
   Future<TaskModel?> createTask(TaskModel task) async {
     try {
+      task.id ??= _taskCollection.doc().id;
       final taskMap = task.toMap();
       await _taskCollection.doc(task.id).set(taskMap);
       return task;
     } on FirebaseException catch (e) {
-      print(e.toString());
+      print("Error creating task :${e.toString()}");
+      return null;
     }
   }
 
   // get all tasks
   Stream<List<TaskModel>> getAllTasks() {
     try {
-      return _taskCollection.snapshots().map((QuerySnapshot snapshot) {
-        return snapshot.docs.map((DocumentSnapshot doc) {
-          return TaskModel.fromJson(doc);
-        }).toList();
-      });
+      return _taskCollection
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map((QuerySnapshot snapshot) {
+            return snapshot.docs.map((DocumentSnapshot doc) {
+              return TaskModel.fromJson(doc);
+            }).toList();
+          });
     } on FirebaseException catch (e) {
-      print(e.toString());
+      print("Error getting tasks: ${e.toString()}");
       throw (e);
     }
   }
@@ -36,18 +41,21 @@ class TaskService {
     try {
       final taskMap = task.toMap();
       await _taskCollection.doc(task.id).update(taskMap);
+      print("Task Updated : ${task.title}");
     } on FirebaseException catch (e) {
-      print(e.toString());
+      print("Error updating tasks: ${e.toString()}");
     }
   }
 
   //delete task
   Future<void> deleteTask(String? id) async {
     try {
-      await _taskCollection.doc(id).delete();
+      if (id != null) {
+        await _taskCollection.doc(id).delete();
+        print("Task Deleted with id: $id");
+      }
     } on FirebaseException catch (e) {
-      print(e.toString());
+      print("Error deleting task:${e.toString()}");
     }
   }
-
 }
