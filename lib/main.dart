@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/firebase_options.dart';
 import 'package:flutter_application_2/screens/add_task_page.dart';
@@ -10,8 +11,17 @@ import 'package:flutter_application_2/screens/todo_home_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
 }
+
+//====================Function for background message handling
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+ await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // Handle the background message here
+  print("Handling a background message: ${message.messageId}");
+}
+
   
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

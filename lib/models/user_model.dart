@@ -7,6 +7,7 @@ class UserModel {
   DateTime? createdAt;
   int? status;
   String? uid;
+  String? fcmToken;
 
   UserModel({
     this.email,
@@ -15,6 +16,7 @@ class UserModel {
     this.createdAt,
     this.status,
     this.uid,
+    this.fcmToken
   });
 
   factory UserModel.fromjson(DocumentSnapshot data) {
@@ -23,6 +25,7 @@ class UserModel {
       uid: data['uid'],
       name: data['name'],
       status: data['status'],
+      fcmToken: data['fcmToken'],
     );
   }
 
@@ -34,6 +37,7 @@ class UserModel {
       'password': password,
       'status': status,
       'createdAt': createdAt,
+      'fcmToken': fcmToken,
     };
   }
   
